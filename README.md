@@ -23,8 +23,11 @@ the folder contains the reference sequence for each chromosome of the bam fileã€
 python HBOS-CNV.py [reference] [bamfile] [binSize] [GroundTruth]
 
 [reference]: the reference folder path
+
 [bamfile]: a bam file after sort
+
 [binSize]: the window size ('1000'by default)
+
 [GroundTruth]: Optional, if you are doing a simulation test, you can add the file of correct mutation location.
 
 ### run the default example
