@@ -11,6 +11,7 @@ Python >= 3.7
 * sklearn
 * pysam
 * matplotlib
+
 You can install the above package using the following command：
 pip install numpy sklearn  pysam matplotlib
 
@@ -25,8 +26,11 @@ The whole genomes can be detected by batch file
 python HBOS-CNV.py [reference] [bamfile] [binSize] [GroundTruth]
 
 [reference]: the reference folder path
+
 [bamfile]: a bam file after sort
+
 [binSize]: the window size ('1000'by default)
+
 [GroundTruth]: Optional, if you are doing a simulation test, you can add the file of correct mutation location.
 
 ### run the default example
