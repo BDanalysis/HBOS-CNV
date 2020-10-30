@@ -3,7 +3,9 @@ HBOS-CNV: a new approach to detect copy number variations from next-generation s
 
 ## Installation
 The following software must be installed on your machine:
+
 Python : tested with version 3.7
+
 Python >= 3.7
 
 ### Python dependencies
@@ -13,6 +15,7 @@ Python >= 3.7
 * matplotlib
 
 You can install the above package using the following command：
+
 pip install numpy sklearn  pysam matplotlib
 
 
