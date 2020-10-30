@@ -40,5 +40,5 @@ Finally, two result files will be generated in the folder called result, one is 
 
 ## About Visualization
 if you want to visually see the test results,You have two choices:
-(1) In the file showTool.py, change the parameter which named _DEBUG to True. In this way, you can get the figure when you are running.
-(2) In the file showTool.py, change the parameter which named _DEBUG to Talse. In this way, the program will save the figure in folder named img.
+* In the file showTool.py, change the parameter which named _DEBUG to True. In this way, you can get the figure when you are running.
+* In the file showTool.py, change the parameter which named _DEBUG to Talse. In this way, the program will save the figure in folder named img.
