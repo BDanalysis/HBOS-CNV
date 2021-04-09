@@ -33,10 +33,11 @@ def read_ref_file(filename, chr_num, ref):
 
 
 def Binning(ref, binSize, chrLen, filename):#importent
-    chrTag = np.full(23, 0)
-    chrList = np.arange(23)
+    chrTag = np.full(25, 0)
+    chrList = np.arange(25)
+
     maxNum = int(chrLen.max() / binSize) + 1
-    InitRD = np.full((23, maxNum), 0.0)
+    InitRD = np.full((25, maxNum), 0.0)
     print(maxNum)
     # read bam file and get bin rd
     # print("Read bam file: " + str(filename))
@@ -46,7 +47,9 @@ def Binning(ref, binSize, chrLen, filename):#importent
         if line.reference_name:
             chr = line.reference_name.strip('chr')
             if chr == 'X' or chr == 'x':
-                chr = str(23-1)
+                chr = str(23)
+            elif chr == 'Y' or chr == 'y':
+                chr = str(24)
             if chr.isdigit():
                 InitRD[int(chr)][idx] += 1
                 chrTag[int(chr)] = 1
@@ -54,7 +57,6 @@ def Binning(ref, binSize, chrLen, filename):#importent
     chrNum = len(chrList)
     InitGC = np.full((chrNum, maxNum), 0)
     pos = np.full((chrNum, maxNum), 0)
-
     # initialize bin_data and bin_head
     count = 0
     out_chr = 0
