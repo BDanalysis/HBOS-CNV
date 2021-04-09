@@ -46,8 +46,10 @@ def calculate_CNV_point(perp,Y,binSize,all_index):
     CNV_type = np.ones(num_bins)
     for i in range(num_bins):
         if pery_list[i]==1:
-            if balance >= Y[i]:
+            if balance >= Y[i]*2:
                 CNV_type[i] = 0
+            elif balance >= Y[i]:
+                CNV_type[i] = 1
             else:
                 CNV_type[i] = 2
     sum = 0
@@ -186,7 +188,7 @@ def calculating_CN(prey,RD,CNVRD, CNVtype):
     CNVend = prey[:, 1]
     CN = np.full(len(CNVtype), 0)
     homoRD = np.mean(RD[CNVRD == 0]) if len(RD[CNVRD == 0])!=0 else 0
-    hemiRD = np.mean(RD[CNVRD == 2]) if len(RD[CNVRD == 2])!=0 else 0
+    hemiRD = np.mean(RD[CNVRD == 1]) if len(RD[CNVRD == 1])!=0 else 0
     purity = 2 * (homoRD - hemiRD) / (homoRD - 2 * hemiRD)
     for i in range(len(CNVtype)):
         begin = CNVstart[i]
@@ -211,9 +213,10 @@ def DBScan(data,KEY,_eps):
 refpath = sys.argv[1]
 binSize = int(sys.argv[3])
 bam = sys.argv[2]
-groundTruth = sys.argv[4]
-outpath = "./result"
+groundTruth = "./GroundTruthCNV"#sys.argv[5]
+outpath = sys.argv[4]
 t = Time()
+
 
 try:
     truth_start, truth_end = read_truth_file(groundTruth)
@@ -221,35 +224,42 @@ except IOError:
     truth_start = []
     truth_end = []
 
-t.start(outpath+"/"+bam)
-mid = bam.split("/")
-mid = mid[-1].split(".")[0]
+
+mid1 = bam.split("/")
+mid = mid1[-1].split(".")[0]+mid1[-1].split(".")[1]
 outfile = outpath + '/'+mid+".result.txt"
 outsorcefile = outpath + '/' + mid +".sorce.txt"
-ref = [[] for i in range(23)]
+t.start(outfile)
+ref = [[] for i in range(25)]
 try:
     refList = read_bam_file(bam)
 except ValueError:
     print("ValueError:"+bam+"may be the file is error")
     sys.exit(1)
+
 for i in range(len(refList)):
     chr = refList[i]
     chr_num = chr.strip('chr')
+    if chr_num == 'X' or chr_num == 'x':
+        chr_num = str(23)
+    elif chr_num == 'Y' or chr_num == 'y':
+        chr_num = str(24)
     if chr_num.isdigit():
         chr_num = int(chr_num)
-        reference = refpath + '/chr' + str(chr_num) + '.fa'
+        reference = refpath + '/chr' + str(chr_num) + '.fasta'
         ref = read_ref_file(reference, chr_num, ref)
-chrLen = np.full(23, 0)
-for i in range(1, 23):
+chrLen = np.full(25, 0)
+for i in range(1, 25):
     chrLen[i] = len(ref[i])
 RD,GC,out_chr = Binning(ref, binSize, chrLen, bam)
+
 truth_list = ensure_bad_bin(truth_start,truth_end,RD,binSize)
 RD, GC, truth_list,all_index = alignment(RD, GC, truth_list)
 unnormal_RD = gcCheck(RD,GC)
 middle,normal_RD = normalization(unnormal_RD)
 truth_list,matrix = makeMatrix(normal_RD,unnormal_RD,truth_list)
-print(np.sum(truth_list))
-window = 30
+window = int(2*len(RD)*0.0001)
+print("windows:"+ str(window))
 score_HBOS,Y,pre_labels = find_od_HBOS(matrix,window)
 
 pery = calculate_answer(pre_labels)
